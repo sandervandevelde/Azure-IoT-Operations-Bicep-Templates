@@ -1,6 +1,6 @@
 param aioInstanceName string = 'uno148v2advantechcluster-ops-instance'
 param customLocationName string = 'uno148v2advantechcln'
-param dataflowName string = 'azure-eventgrid-mqtt-2-local-mqtt'
+param dataflowName string = 'azure-eventgrid-mqtt-2-local-mqtt-command'
 
 resource aioInstance 'Microsoft.IoTOperations/instances@2024-11-01' existing = {
   name: aioInstanceName
@@ -19,7 +19,7 @@ resource defaultDataflowEndpoint 'Microsoft.IoTOperations/instances/dataflowEndp
 // Pointer to the eventgrid mqtt broker dataflow endpoint
 resource eventgridMqttDataflowEndpoint 'Microsoft.IoTOperations/instances/dataflowEndpoints@2024-11-01' existing = {
   parent: aioInstance
-  name: 'azure-eventgrid-mqtt-endpoint'
+  name: 'azure-eventgrid-mqtt-dataflow-endpoint'
 }
 
 
@@ -48,7 +48,7 @@ resource dataflow 'Microsoft.IoTOperations/instances/dataflowProfiles/dataflows@
           endpointRef: eventgridMqttDataflowEndpoint.name
           // Filter the data from the EventGrid MQTT topic 
           dataSources: [
-            'sendtopic/aio/fromcloud/cloud'
+            'aio/command/fromcloud/#'
           ]
         }
       }
@@ -58,7 +58,7 @@ resource dataflow 'Microsoft.IoTOperations/instances/dataflowProfiles/dataflows@
           // Use the default MQTT endpoint as the destination
           endpointRef: defaultDataflowEndpoint.name
           // Send the data to the default MQTT topic 
-          dataDestination: 'target/data/local'
+          dataDestination: 'local/command'
         }
       }
     ]
