@@ -28,4 +28,4 @@ Disable:
 
 ## Contributions
 
-If you want to contribute, plaese provide a pull request.
+If you want to contribute, please provide a pull request.
